@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, Bookmark, Film } from "lucide-react";
-import { motion } from "framer-motion";
+import { Search, Bookmark, Film, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [query, setQuery] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,6 +21,7 @@ function Navbar() {
     e.preventDefault();
     if (query.trim()) {
       navigate(`/search?q=${encodeURIComponent(query)}`);
+      setMobileSearchOpen(false);
     }
   };
 
@@ -40,7 +42,7 @@ function Navbar() {
           </span>
         </Link>
 
-        {/* Search Bar */}
+        {/* Search Bar - Desktop only */}
         <form
           onSubmit={handleSearch}
           className="flex-1 max-w-md relative hidden sm:block"
@@ -58,17 +60,68 @@ function Navbar() {
           />
         </form>
 
-        {/* Watchlist Link */}
-        <motion.div whileTap={{ scale: 0.9 }}>
-          <Link
-            to="/watchlist"
-            className="flex items-center gap-2 text-sm font-medium hover:text-cine-accent transition-colors"
+        {/* Right side icons */}
+        <div className="flex items-center gap-4">
+          {/* Search icon - Mobile only */}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setMobileSearchOpen(true)}
+            className="sm:hidden"
           >
-            <Bookmark size={20} />
-            <span className="hidden md:inline">Watchlist</span>
-          </Link>
-        </motion.div>
+            <Search size={22} />
+          </motion.button>
+
+          {/* Watchlist Link */}
+          <motion.div whileTap={{ scale: 0.9 }}>
+            <Link
+              to="/watchlist"
+              className="flex items-center gap-2 text-sm font-medium hover:text-cine-accent transition-colors"
+            >
+              <Bookmark size={20} />
+              <span className="hidden md:inline">Watchlist</span>
+            </Link>
+          </motion.div>
+        </div>
       </div>
+
+      {/* Mobile Search Overlay - Full screen */}
+      <AnimatePresence>
+        {mobileSearchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="sm:hidden fixed inset-0 bg-cine-dark/98 backdrop-blur-md z-60 px-6 pt-6"
+          >
+            <form onSubmit={handleSearch} className="relative flex items-center gap-2 mb-6">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search movies..."
+                  autoFocus
+                  className="w-full bg-cine-card border border-white/10 rounded-full py-3 pl-10 pr-4 text-sm text-white placeholder-cine-text-muted focus:outline-none focus:ring-2 focus:ring-cine-accent"
+                />
+                <Search
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-cine-text-muted"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileSearchOpen(false)}
+                className="text-white p-2"
+              >
+                <X size={24} />
+              </button>
+            </form>
+            <p className="text-cine-text-muted text-sm text-center mt-8">
+              Search for your favorite movies and shows
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

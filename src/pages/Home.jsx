@@ -10,6 +10,7 @@ import {
   getImageUrl,
 } from "../services/tmdb";
 import MovieRow from "../components/MovieRow";
+import SkeletonCard from "../components/SkeletonCard";
 
 function Home() {
   const [trending, setTrending] = useState([]);
@@ -35,7 +36,6 @@ function Home() {
         setTopRated(topRatedData);
         setUpcoming(upcomingData);
 
-        // Random trending movie ko hero banner ke liye choose karo
         if (trendingData.length > 0) {
           const randomIndex = Math.floor(Math.random() * Math.min(5, trendingData.length));
           setHeroMovie(trendingData[randomIndex]);
@@ -52,12 +52,21 @@ function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-12 h-12 border-4 border-cine-accent border-t-transparent rounded-full"
-        />
+      <div className="pt-24 pb-16">
+        {/* Skeleton Hero */}
+        <div className="h-[70vh] w-full bg-cine-card animate-pulse mb-12" />
+
+        {/* Skeleton Rows */}
+        {[1, 2, 3, 4].map((row) => (
+          <div key={row} className="mb-10">
+            <div className="h-7 w-48 bg-cine-card animate-pulse rounded mb-4 mx-6" />
+            <div className="flex gap-4 overflow-x-hidden px-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
@@ -82,7 +91,7 @@ function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-4xl sm:text-6xl font-bold mb-4 drop-shadow-lg"
+              className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 drop-shadow-lg leading-tight"
             >
               {heroMovie.title}
             </motion.h1>
@@ -90,7 +99,7 @@ function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-cine-text-muted line-clamp-3 mb-6"
+              className="text-cine-text-muted text-sm sm:text-base line-clamp-2 sm:line-clamp-3 mb-6 max-w-lg"
             >
               {heroMovie.overview}
             </motion.p>
@@ -98,20 +107,20 @@ function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex gap-4"
+              className="flex flex-wrap gap-3"
             >
               <Link
                 to={`/movie/${heroMovie.id}`}
-                className="flex items-center gap-2 bg-white text-black font-semibold px-6 py-3 rounded-lg hover:bg-cine-text-muted transition-colors"
+                className="flex items-center gap-2 bg-white text-black font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-cine-text-muted transition-colors text-sm sm:text-base"
               >
-                <Play size={20} fill="black" />
+                <Play size={18} fill="black" />
                 View Details
               </Link>
               <Link
                 to={`/movie/${heroMovie.id}`}
-                className="flex items-center gap-2 bg-white/20 backdrop-blur-sm font-semibold px-6 py-3 rounded-lg hover:bg-white/30 transition-colors"
+                className="flex items-center gap-2 bg-white/20 backdrop-blur-sm font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-white/30 transition-colors text-sm sm:text-base"
               >
-                <Info size={20} />
+                <Info size={18} />
                 More Info
               </Link>
             </motion.div>
