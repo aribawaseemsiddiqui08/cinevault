@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cine-dark: #0a0a0f;
+  --color-cine-darker: #050507;
+  --color-cine-card: #16161f;
+  --color-cine-accent: #e50914;
+  --color-cine-accent-light: #ff2d3d;
+  --color-cine-purple: #7c3aed;
+  --color-cine-text-muted: #9ca3af;
+
+  --font-outfit: "Outfit", sans-serif;
+}
+
+body {
+  background-color: var(--color-cine-dark);
+  color: white;
+  font-family: var(--font-outfit);
+}
+
+/* Custom scrollbar - cinematic feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+::-webkit-scrollbar-thumb {
+  background: #e50914;
+  border-radius: 10px;
+}
+
+/* Hide scrollbar for horizontal movie rows but keep functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
