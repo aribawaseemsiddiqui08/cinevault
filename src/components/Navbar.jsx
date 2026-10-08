@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, Bookmark, Film, X } from "lucide-react";
+import { Search, Bookmark, Film, X, Compass } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Navbar() {
@@ -62,6 +62,15 @@ function Navbar() {
 
         {/* Right side icons */}
         <div className="flex items-center gap-4">
+          {/* Browse Link */}
+          <Link
+            to="/search"
+            className="flex items-center gap-2 text-sm font-medium hover:text-cine-accent transition-colors"
+          >
+            <Compass size={20} />
+            <span className="hidden md:inline">Browse</span>
+          </Link>
+
           {/* Search icon - Mobile only */}
           <motion.button
             whileTap={{ scale: 0.9 }}

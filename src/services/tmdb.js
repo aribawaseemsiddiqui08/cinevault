@@ -50,6 +50,17 @@ export const searchMovies = async (query) => {
   return res.data.results;
 };
 
+// Genre ke hisaab se movies (genreId null ho to sirf popular movies)
+export const discoverByGenre = async (genreId) => {
+  const res = await tmdbClient.get("/discover/movie", {
+    params: {
+      with_genres: genreId || undefined,
+      sort_by: "popularity.desc",
+    },
+  });
+  return res.data.results;
+};
+
 // Single movie ki full details
 export const getMovieDetails = async (id) => {
   const res = await tmdbClient.get(`/movie/${id}`, {
