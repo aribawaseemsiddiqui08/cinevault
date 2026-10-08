@@ -20,6 +20,12 @@ CineVault is a responsive movie and TV show discovery web application that lets 
 - **Watchlist Page** — grid view of saved movies with smooth add/remove animations
 - **Search** — live search with a dedicated results page and empty-state handling
 
+### Module 3 — Search & Genre Filtering
+- **Debounced live search** — results update automatically about half a second after the user stops typing, reducing unnecessary API calls
+- **Genre filter chips** — horizontally scrollable chips (Action, Comedy, Drama, etc.) powered by TMDB's genre list
+- **Browse page** — explore popular movies by genre, or combine a search query with a genre filter
+- Loading skeletons and friendly empty states for no-result searches
+
 ## 🛠️ Tools & Technologies
 
 - React.js (Vite)
@@ -62,6 +68,7 @@ src/
 ├── hooks/ # useWatchlist (LocalStorage logic)
 ├── App.jsx
 └── main.jsx
+├── hooks/          # useWatchlist, useDebounce
 
 ## 👩‍💻 Author
 
