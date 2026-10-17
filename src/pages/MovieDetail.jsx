@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, Clock, Calendar, Bookmark, BookmarkCheck, Play, X } from "lucide-react";
-import { getMovieDetails, getImageUrl } from "../services/tmdb";
+import { getMovieDetails, getRecommendations, getImageUrl } from "../services/tmdb";
 import { useWatchlist } from "../hooks/useWatchlist";
+import MovieRow from "../components/MovieRow";
 
 function MovieDetail() {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
+  const [similar, setSimilar] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showTrailer, setShowTrailer] = useState(false);
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
@@ -17,8 +19,12 @@ function MovieDetail() {
     const fetchMovie = async () => {
       setLoading(true);
       try {
-        const data = await getMovieDetails(id);
+        const [data, recommendations] = await Promise.all([
+          getMovieDetails(id),
+          getRecommendations(id).catch(() => []),
+        ]);
         setMovie(data);
+        setSimilar(recommendations);
       } catch (error) {
         console.error("Error fetching movie details:", error);
       } finally {
@@ -198,6 +204,13 @@ function MovieDetail() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* You May Also Like */}
+        {similar.length > 0 && (
+          <div className="mt-12 -mx-6">
+            <MovieRow title="You May Also Like" movies={similar} />
           </div>
         )}
       </div>

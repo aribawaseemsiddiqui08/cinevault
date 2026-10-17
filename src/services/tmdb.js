@@ -69,6 +69,20 @@ export const getMovieDetails = async (id) => {
   return res.data;
 };
 
+// "You May Also Like" ke liye recommended movies
+export const getRecommendations = async (id) => {
+  const res = await tmdbClient.get(`/movie/${id}/recommendations`);
+  return res.data.results;
+};
+
+// "Surprise Me" ke liye random popular movie
+export const getRandomMovie = async () => {
+  const page = Math.floor(Math.random() * 10) + 1;
+  const res = await tmdbClient.get("/movie/popular", { params: { page } });
+  const results = res.data.results;
+  return results[Math.floor(Math.random() * results.length)];
+};
+
 // Genre list (filter chips ke liye)
 export const getGenres = async () => {
   const res = await tmdbClient.get("/genre/movie/list");

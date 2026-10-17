@@ -51,16 +51,50 @@ export function WatchlistProvider({ children }) {
         backdrop_path: movie.backdrop_path,
         vote_average: movie.vote_average,
         release_date: movie.release_date,
+        watched: false,
+        userRating: 0,
       };
       return [saved, ...prev]; // naya movie sabse upar
     });
   }, []);
 
+  // Movie ko watched / not watched mark karo
+  const toggleWatched = useCallback((movieId) => {
+    setWatchlist((prev) =>
+      prev.map((m) => (m.id === movieId ? { ...m, watched: !m.watched } : m))
+    );
+  }, []);
+
+  // 1-5 star rating do (same star dobara dabao to rating hat jati hai)
+  const rateMovie = useCallback((movieId, rating) => {
+    setWatchlist((prev) =>
+      prev.map((m) =>
+        m.id === movieId
+          ? { ...m, userRating: m.userRating === rating ? 0 : rating }
+          : m
+      )
+    );
+  }, []);
+
   const clearWatchlist = useCallback(() => setWatchlist([]), []);
 
   const value = useMemo(
-    () => ({ watchlist, isInWatchlist, toggleWatchlist, clearWatchlist }),
-    [watchlist, isInWatchlist, toggleWatchlist, clearWatchlist]
+    () => ({
+      watchlist,
+      isInWatchlist,
+      toggleWatchlist,
+      toggleWatched,
+      rateMovie,
+      clearWatchlist,
+    }),
+    [
+      watchlist,
+      isInWatchlist,
+      toggleWatchlist,
+      toggleWatched,
+      rateMovie,
+      clearWatchlist,
+    ]
   );
 
   return (

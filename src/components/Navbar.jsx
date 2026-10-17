@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, Bookmark, Film, X, Compass } from "lucide-react";
+import { Search, Bookmark, Film, X, Compass, Shuffle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWatchlist } from "../hooks/useWatchlist";
+import { getRandomMovie } from "../services/tmdb";
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [query, setQuery] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [surprising, setSurprising] = useState(false);
   const navigate = useNavigate();
   const { watchlist } = useWatchlist();
 
@@ -24,6 +26,20 @@ function Navbar() {
     if (query.trim()) {
       navigate(`/search?q=${encodeURIComponent(query)}`);
       setMobileSearchOpen(false);
+    }
+  };
+
+  // Random popular movie ka detail page kholo
+  const handleSurprise = async () => {
+    if (surprising) return;
+    setSurprising(true);
+    try {
+      const movie = await getRandomMovie();
+      if (movie) navigate(`/movie/${movie.id}`);
+    } catch (error) {
+      console.error("Surprise Me failed:", error);
+    } finally {
+      setSurprising(false);
     }
   };
 
@@ -72,6 +88,18 @@ function Navbar() {
             <Compass size={20} />
             <span className="hidden md:inline">Browse</span>
           </Link>
+
+          {/* Surprise Me */}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={handleSurprise}
+            disabled={surprising}
+            title="Surprise me"
+            className="flex items-center gap-2 text-sm font-medium hover:text-cine-accent transition-colors disabled:opacity-50"
+          >
+            <Shuffle size={20} className={surprising ? "animate-spin" : ""} />
+            <span className="hidden md:inline">Surprise Me</span>
+          </motion.button>
 
           {/* Search icon - Mobile only */}
           <motion.button
