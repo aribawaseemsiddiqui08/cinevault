@@ -31,6 +31,9 @@ CineVault is a responsive movie and TV show discovery web application that lets 
 - **Persistent storage** using LocalStorage, with cross-tab sync
 - **Watchlist page** with smooth add/remove animations, sorting (recently added, highest rated, A-Z), and a clear-all option
 - Only essential movie fields are stored, keeping LocalStorage lightweight
+- **Mark as watched** with a personal 1-5 star rating, plus All / To Watch / Watched tabs
+- **"You May Also Like"** recommendations row on every movie detail page
+- **Surprise Me** button that opens a random popular movie
 
 ## 🛠️ Tools & Technologies
 
