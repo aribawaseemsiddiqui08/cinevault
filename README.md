@@ -1,6 +1,6 @@
 # 🎬 CineVault — Movie & TV Show Discovery Platform
 
-CineVault is a responsive movie and TV show discovery web application that lets users browse trending, popular, and top-rated titles in real time via the TMDB API. It features live search, detailed movie pages with cast info and trailer playback, and a personal watchlist — all wrapped in a Netflix-inspired, cinematic UI.
+CineVault is a responsive movie and TV show discovery web application that lets users browse trending, popular, and top-rated titles in real time via the TMDB API. It features debounced live search, genre filtering, detailed movie pages with cast info and trailer playback, and a persistent personal watchlist, all wrapped in a Netflix-inspired, cinematic UI.
 
 ## 🚀 Features
 
@@ -16,9 +16,8 @@ CineVault is a responsive movie and TV show discovery web application that lets 
 ### Module 2 — Movie Details, Watchlist & Search
 - **Movie Detail Page** — full movie info (overview, genres, runtime, release year, rating), director, and cast list with photos
 - **Trailer Modal** — embedded YouTube trailer playback
-- **Watchlist** — add/remove movies from any page, persisted using LocalStorage
-- **Watchlist Page** — grid view of saved movies with smooth add/remove animations
-- **Search** — live search with a dedicated results page and empty-state handling
+- **Watchlist** — add/remove movies, persisted using LocalStorage
+- **Search** — search results page with empty-state handling
 
 ### Module 3 — Search & Genre Filtering
 - **Debounced live search** — results update automatically about half a second after the user stops typing, reducing unnecessary API calls
@@ -26,11 +25,19 @@ CineVault is a responsive movie and TV show discovery web application that lets 
 - **Browse page** — explore popular movies by genre, or combine a search query with a genre filter
 - Loading skeletons and friendly empty states for no-result searches
 
+### Module 4 — Watchlist
+- **One-tap bookmark** on every movie card (Home, Browse, Search) and on the detail page
+- **Shared watchlist state** via React Context, so the Navbar shows a live count badge
+- **Persistent storage** using LocalStorage, with cross-tab sync
+- **Watchlist page** with smooth add/remove animations, sorting (recently added, highest rated, A-Z), and a clear-all option
+- Only essential movie fields are stored, keeping LocalStorage lightweight
+
 ## 🛠️ Tools & Technologies
 
 - React.js (Vite)
 - Tailwind CSS
 - React Router DOM
+- React Context API
 - Framer Motion (animations)
 - Axios
 - TMDB REST API
@@ -51,7 +58,9 @@ CineVault is a responsive movie and TV show discovery web application that lets 
 ```
 
 3. Create a `.env` file in the root directory and add your TMDB API key
-VITE_TMDB_API_KEY=your_api_key_here
+```
+   VITE_TMDB_API_KEY=your_api_key_here
+```
 
 4. Run the development server
 ```bash
@@ -61,14 +70,17 @@ VITE_TMDB_API_KEY=your_api_key_here
 5. Open `http://localhost:5173` in your browser
 
 ## 📂 Project Structure
+
+```
 src/
-├── components/ # Navbar, MovieCard, MovieRow, SkeletonCard
-├── pages/ # Home, MovieDetail, SearchResults, Watchlist
-├── services/ # TMDB API service
-├── hooks/ # useWatchlist (LocalStorage logic)
+├── components/     # Navbar, MovieCard, MovieRow, SkeletonCard
+├── context/        # WatchlistProvider (shared watchlist state)
+├── hooks/          # useWatchlist, useDebounce
+├── pages/          # Home, MovieDetail, SearchResults, Watchlist
+├── services/       # TMDB API service
 ├── App.jsx
 └── main.jsx
-├── hooks/          # useWatchlist, useDebounce
+```
 
 ## 👩‍💻 Author
 
