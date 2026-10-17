@@ -1,22 +1,72 @@
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { BookmarkX, Film } from "lucide-react";
+import { BookmarkX, Film, Star, Trash2 } from "lucide-react";
 import { useWatchlist } from "../hooks/useWatchlist";
 import { getImageUrl } from "../services/tmdb";
 
 function Watchlist() {
-  const { watchlist, toggleWatchlist } = useWatchlist();
+  const { watchlist, toggleWatchlist, clearWatchlist } = useWatchlist();
+  const [sortBy, setSortBy] = useState("recent");
+
+  const sortedList = useMemo(() => {
+    const list = [...watchlist];
+    if (sortBy === "rating") {
+      list.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+    } else if (sortBy === "title") {
+      list.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+    }
+    return list; // "recent" mein wahi order jo saved hai (naya upar)
+  }, [watchlist, sortBy]);
+
+  const handleClear = () => {
+    if (window.confirm("Remove all movies from your watchlist?")) {
+      clearWatchlist();
+    }
+  };
 
   return (
     <div className="pt-24 px-6 sm:px-12 pb-16 max-w-6xl mx-auto min-h-screen">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-8">My Watchlist</h1>
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold">
+          My Watchlist
+          {watchlist.length > 0 && (
+            <span className="text-cine-text-muted text-lg font-medium ml-3">
+              ({watchlist.length})
+            </span>
+          )}
+        </h1>
+
+        {watchlist.length > 0 && (
+          <div className="flex items-center gap-3">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-cine-card border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cine-accent"
+            >
+              <option value="recent" className="bg-cine-card">Recently added</option>
+              <option value="rating" className="bg-cine-card">Highest rated</option>
+              <option value="title" className="bg-cine-card">Title (A-Z)</option>
+            </select>
+
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={handleClear}
+              className="flex items-center gap-2 text-sm bg-white/10 hover:bg-cine-accent transition-colors px-3 py-2 rounded-lg"
+            >
+              <Trash2 size={16} />
+              Clear all
+            </motion.button>
+          </div>
+        )}
+      </div>
 
       {watchlist.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-center py-20">
           <Film size={48} className="text-cine-text-muted mb-4" />
           <p className="text-cine-text-muted mb-2">Your watchlist is empty.</p>
           <p className="text-cine-text-muted text-sm mb-6">
-            Add movies you want to watch later.
+            Tap the bookmark icon on any movie to save it here.
           </p>
           <Link
             to="/"
@@ -28,7 +78,7 @@ function Watchlist() {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
           <AnimatePresence>
-            {watchlist.map((movie) => (
+            {sortedList.map((movie) => (
               <motion.div
                 key={movie.id}
                 layout
@@ -54,14 +104,18 @@ function Watchlist() {
                   <p className="mt-2 text-sm font-medium line-clamp-1">
                     {movie.title}
                   </p>
+                  <div className="flex items-center gap-2 text-xs text-cine-text-muted mt-1">
+                    <Star size={12} className="text-yellow-400 fill-yellow-400" />
+                    <span>{movie.vote_average?.toFixed(1)}</span>
+                    {movie.release_date && (
+                      <span>• {movie.release_date.split("-")[0]}</span>
+                    )}
+                  </div>
                 </Link>
 
                 <motion.button
                   whileTap={{ scale: 0.9 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleWatchlist(movie);
-                  }}
+                  onClick={() => toggleWatchlist(movie)}
                   className="absolute top-2 right-2 bg-black/70 backdrop-blur-sm p-2 rounded-full hover:bg-cine-accent transition-colors"
                   title="Remove from watchlist"
                 >

@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, Bookmark, Film, X, Compass } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useWatchlist } from "../hooks/useWatchlist";
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [query, setQuery] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const navigate = useNavigate();
+  const { watchlist } = useWatchlist();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,13 +82,20 @@ function Navbar() {
             <Search size={22} />
           </motion.button>
 
-          {/* Watchlist Link */}
+          {/* Watchlist Link with count badge */}
           <motion.div whileTap={{ scale: 0.9 }}>
             <Link
               to="/watchlist"
               className="flex items-center gap-2 text-sm font-medium hover:text-cine-accent transition-colors"
             >
-              <Bookmark size={20} />
+              <div className="relative">
+                <Bookmark size={20} />
+                {watchlist.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-cine-accent text-white text-[10px] font-bold min-w-4 h-4 px-1 rounded-full flex items-center justify-center">
+                    {watchlist.length}
+                  </span>
+                )}
+              </div>
               <span className="hidden md:inline">Watchlist</span>
             </Link>
           </motion.div>
