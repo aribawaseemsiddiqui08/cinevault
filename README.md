@@ -2,6 +2,8 @@
 
 CineVault is a responsive movie and TV show discovery web application that lets users browse trending, popular, and top-rated titles in real time via the TMDB API. It features debounced live search, genre filtering, detailed movie pages with cast info and trailer playback, and a persistent personal watchlist, all wrapped in a Netflix-inspired, cinematic UI.
 
+🔗 **Live Demo:** https://cinevault-gilt-nine.vercel.app
+
 ## 🚀 Features
 
 ### Module 1 — Core Setup & Home Page
@@ -34,6 +36,12 @@ CineVault is a responsive movie and TV show discovery web application that lets 
 - **Mark as watched** with a personal 1-5 star rating, plus All / To Watch / Watched tabs
 - **"You May Also Like"** recommendations row on every movie detail page
 - **Surprise Me** button that opens a random popular movie
+
+### Module 5 — Polish & Deployment
+- Custom **404 page** for unknown routes
+- **Route-based code splitting** (lazy loading) for faster initial load
+- SEO meta tags, page title and favicon
+- Deployed on **Vercel** with SPA routing support
 
 ## 🛠️ Tools & Technologies
 
